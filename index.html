@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>داشبورد مالی</title>
+<meta name="description" content="Personal Finance Dashboard">
+<meta name="theme-color" content="#ECEDEF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="داشبورد مالی">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/app.css">
+<script>
+  // pick the theme before first paint so there is no flash
+  (function () {
+    var t = localStorage.getItem('theme') || 'auto';
+    var d = t === 'dark' || (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+    document.documentElement.dataset.theme = d ? 'dark' : 'light';
+  })();
+</script>
+</head>
+<body>
+<div id="app"><div class="hint" style="padding-top:45vh">…</div></div>
+<div id="layers"></div>
+<div id="report" class="report"></div>
+<input type="file" id="filein" accept=".db,.sqlite,.sqlite3,application/octet-stream,application/x-sqlite3" style="display:none">
+<script src="vendor/sql-wasm.js"></script>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
