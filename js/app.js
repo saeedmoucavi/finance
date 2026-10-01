@@ -82,26 +82,46 @@ function miniRing(frac, size = 44, label = '') {
     ${label ? `<text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="10" font-weight="700" fill="var(--text)" font-family="Vazir">${label}</text>` : ''}</svg>`;
 }
 
+/** Share `usable` degrees in proportion to `values`, but give every value at least
+ *  `minSpan` so a tiny slice still has room for its rounded ends instead of
+ *  spilling into its neighbours. The extra comes out of the larger slices. */
+function fairSpans(values, usable, minSpan) {
+  const fixed = new Set();
+  let free = usable;
+  let rest = 0;
+  for (;;) {
+    free = usable - minSpan * fixed.size;
+    rest = values.reduce((s, v, i) => (fixed.has(i) ? s : s + v), 0);
+    let grew = false;
+    values.forEach((v, i) => {
+      if (!fixed.has(i) && (rest <= 0 || (free * v) / rest < minSpan)) { fixed.add(i); grew = true; }
+    });
+    if (!grew || fixed.size === values.length) break;
+  }
+  return values.map((v, i) => (fixed.has(i) ? minSpan : (free * v) / rest));
+}
+
 /** Segmented donut with rounded, separated ends (income / expenses / installments). */
 function donut(values, colors, size, stroke, track, center = '') {
   const r = (size - stroke) / 2;
   const cx = size / 2;
-  const total = values.reduce((a, b) => a + b, 0);
-  const live = values.filter((v) => v > 0).length;
+  const idx = values.map((v, i) => i).filter((i) => values[i] > 0);
+  // round caps reach past each arc's end by capDeg, so every slot gives that
+  // back on both sides plus a visible 4° gap
   const capDeg = (stroke / 2 / r) * (180 / Math.PI);
+  const many = idx.length > 1;
+  const gap = many ? capDeg * 2 + 4 : 0;
+  const slots = many ? fairSpans(idx.map((i) => values[i]), 360, gap + 1.5) : [360];
   let arcs = '';
-  if (total > 0) {
-    let start = 0;
-    values.forEach((v, i) => {
-      if (v <= 0) return;
-      const sweep = (v / total) * 360;
-      const gap = live > 1 ? capDeg * 2 + 4 : 0;
-      const draw = Math.max(0.1, sweep - gap);
+  let start = 0;
+  idx.forEach((i, k) => {
+    const draw = slots[k] - gap;
+    if (draw > 0) {
       arcs += `<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="${colors[i]}" stroke-width="${stroke}" stroke-linecap="round"
         pathLength="360" stroke-dasharray="${draw} 360" stroke-dashoffset="${-(start + gap / 2)}" transform="rotate(-90 ${cx} ${cx})"/>`;
-      start += sweep;
-    });
-  }
+    }
+    start += slots[k];
+  });
   return `<div style="position:relative;width:${size}px;height:${size}px;flex-shrink:0" class="rise">
     <svg width="${size}" height="${size}"><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="${track}" stroke-width="${stroke}"/>${arcs}</svg>
     <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">${center}</div></div>`;
