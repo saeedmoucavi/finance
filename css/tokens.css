@@ -1,0 +1,52 @@
+/* Design tokens: every colour, radius and size the app uses.
+   Light palette in :root, dark palette under html[data-theme=dark]. */
+
+@font-face { font-family: Vazir; src: url(../fonts/Vazirmatn-Regular.ttf) format('truetype'); font-weight: 300 400; font-display: swap; }
+@font-face { font-family: Vazir; src: url(../fonts/Vazirmatn-Medium.ttf) format('truetype'); font-weight: 500; font-display: swap; }
+@font-face { font-family: Vazir; src: url(../fonts/Vazirmatn-Bold.ttf) format('truetype'); font-weight: 600 800; font-display: swap; }
+
+/* Platinum palette: graphite for anything readable, silver as decoration. */
+:root {
+  --bg: #ECEDEF; --card: #FFFFFF; --text: #1E2330; --text2: #596273; --muted: #79818F;
+  --hair: #D3D8DE; --div: #EEF0F3; --field: #F3F4F6; --track: #F1F2F4;
+  --accent: #2E3440; --accent-top: #3A414F; --on-accent: #FFFFFF;
+  --hero: #1B1F26; --hero-edge: transparent; --hero-muted: #A2ABB6;
+  --pos: #2F7D64; --neg: #A8443A; --pos-bg: #E6F0EB; --neg-bg: #F6E9E7; --gold-bg: #F6F0E0; --gold: #9A7A22;
+  --nav: #FFFFFF; --nav-active: #2E3440; --fab-top: #3A414F; --fab-bottom: #2E3440; --fab-icon: #FFFFFF;
+  --shadow: 0 10px 26px rgba(50, 56, 72, .08); --scrim: rgba(20, 23, 30, .38);
+  --pill-bg: linear-gradient(#3A414F, #2E3440);
+  --safe-top: env(safe-area-inset-top); --safe-bottom: env(safe-area-inset-bottom);
+  color-scheme: light;
+}
+html[data-theme=dark] {
+  --bg: #121419; --card: #1D2027; --text: #E6E9EE; --text2: #9AA3AE; --muted: #8C94A1;
+  --hair: #3A3F49; --div: #2A2E36; --field: #262A32; --track: #272B33;
+  --accent: #E6E9EE; --accent-top: #E8EBEF; --on-accent: #1B1F26;
+  --hero: #0B0D11; --hero-edge: #262A32; --hero-muted: #A2ABB6;
+  --pos: #4FCBA4; --neg: #F08A7E; --pos-bg: #1F3A31; --neg-bg: #3E2522; --gold-bg: #3A3220; --gold: #E3C06A;
+  --nav: #1D2027; --nav-active: #FFFFFF; --fab-top: #E8EBEF; --fab-bottom: #C7CED6; --fab-icon: #1B1F26;
+  --shadow: none; --scrim: rgba(0, 0, 0, .6);
+  --pill-bg: linear-gradient(#2C313B, #252932);
+  color-scheme: dark;
+}
+
+/* ---------------------------------------------------------------- shape & type
+   Corner radii, sizes and the font. Change a value here and every screen follows. */
+:root {
+  --font: Vazir, system-ui, sans-serif;
+  --text-size: 14px;
+  --r-card: 26px;      /* cards */
+  --r-hero: 28px;      /* graphite headline card */
+  --r-tile: 22px;      /* small tiles on the More screen */
+  --r-sheet: 30px;     /* top corners of bottom sheets */
+  --r-dialog: 28px;    /* dialogs */
+  --r-field: 19px;     /* text fields */
+  --r-pill: 20px;      /* segmented controls, chips */
+  --r-item: 16px;      /* list rows */
+  --ring: 36px;        /* round outline buttons */
+  --chip: 34px;        /* tinted icon circles */
+  --nav-height: 68px;  /* bottom navigation */
+  --fab: 56px;         /* the round + button */
+  --page-gutter: 16px; /* left / right page margin */
+  --max-width: 480px;  /* app column width on large screens */
+}
