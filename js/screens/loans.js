@@ -14,8 +14,8 @@ export const loansScreen = () => {
   const lt = D.loanTotals(...J.monthRange(ty, tm));
   const cell = (label, value, w) => `<div class="col" style="flex:${w};min-width:0"><span class="ell" style="font-size:11px;color:var(--hero-muted)">${label}</span>
     <span class="ell" style="font-size:17px;font-weight:600;color:#fff">${value}</span></div>`;
-  return `<div class="page">
-  ${topbar(tr('nav_loans'), false, ring('plus', 'loanNew'))}
+  return `<div class="page sub">
+  ${topbar(tr('nav_loans'), true, ring('plus', 'loanNew'))}
   <div class="hero row" style="border-radius:24px;padding:14px 16px;gap:14px">${cell(tr('remaining_total'), compact(lt.remaining), 1.2)}${cell(tr('this_month'), compact(lt.dueThisMonth), 1)}${cell(tr('active_loans'), num(lt.active), 0.7)}</div>
   ${loans.length ? loans.map(loanCard).join('') : hint(tr('no_loans_long'))}
   <button class="link center" style="align-self:center" data-a="loanArchived">${tr(st.archived ? 'hide_archived' : 'show_archived')}</button>

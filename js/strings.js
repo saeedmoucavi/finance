@@ -931,5 +931,125 @@ export const TEXT = {
  "ics_title": [
   "قسط %1$s · %2$s",
   "Installment %1$s · %2$s"
+ ],
+ "nav_assets": [
+  "دارایی",
+  "Assets"
+ ],
+ "my_assets": [
+  "دارایی من",
+  "My assets"
+ ],
+ "period_week": [
+  "یک هفته",
+  "1 week"
+ ],
+ "period_month": [
+  "یک ماه",
+  "1 month"
+ ],
+ "period_6m": [
+  "شش ماه",
+  "6 months"
+ ],
+ "period_year": [
+  "یک سال",
+  "1 year"
+ ],
+ "market_price": [
+  "قیمت لحظه‌ای بازار",
+  "Live market price"
+ ],
+ "manual_amount": [
+  "مبلغ دستی",
+  "Manual amount"
+ ],
+ "grp_gold": [
+  "طلا",
+  "Gold"
+ ],
+ "grp_coin": [
+  "سکه",
+  "Coins"
+ ],
+ "grp_currency": [
+  "ارز",
+  "Currency"
+ ],
+ "grp_crypto": [
+  "رمزارز",
+  "Crypto"
+ ],
+ "quantity": [
+  "مقدار",
+  "Quantity"
+ ],
+ "unit_price": [
+  "قیمت هر %s",
+  "Price per %s"
+ ],
+ "current_value": [
+  "ارزش فعلی",
+  "Current value"
+ ],
+ "bought_on": [
+  "تاریخ خرید",
+  "Bought on"
+ ],
+ "prices_from": [
+  "قیمت‌ها از tgju.org · %s",
+  "Prices from tgju.org · %s"
+ ],
+ "prices_offline": [
+  "بدون اتصال · آخرین قیمت‌ها %s",
+  "Offline · last prices %s"
+ ],
+ "prices_never": [
+  "هنوز قیمتی دریافت نشده؛ اینترنت را روشن کنید",
+  "No prices yet — connect to the internet"
+ ],
+ "no_price": [
+  "قیمت در دسترس نیست",
+  "No price available"
+ ],
+ "buy": [
+  "خرید",
+  "Buy"
+ ],
+ "sell": [
+  "فروش",
+  "Sell"
+ ],
+ "kind_coin": [
+  "سکه",
+  "Coin"
+ ],
+ "kind_crypto": [
+  "رمزارز",
+  "Crypto"
+ ],
+ "each": [
+  "هر %s",
+  "per %s"
+ ],
+ "share_of": [
+  "سهم",
+  "Share"
+ ],
+ "pick_item": [
+  "یک مورد را انتخاب کنید",
+  "Pick an item"
+ ],
+ "loans_menu_sub": [
+  "اقساط، پرداخت و وام جدید",
+  "Installments, payments, new loans"
+ ],
+ "no_assets_long": [
+  "هنوز دارایی‌ای ثبت نکرده‌اید. با دکمهٔ + طلا، سکه، ارز، رمزارز یا هر دارایی دیگری را اضافه کنید.",
+  "No assets yet. Add gold, coins, currency, crypto or anything else with the + button."
+ ],
+ "link_market": [
+  "قیمت این دارایی از بازار خوانده می‌شود",
+  "This asset is priced from the market"
  ]
 };

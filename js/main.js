@@ -2,6 +2,7 @@
 import * as D from './db.js';
 import { loadPrefs, render } from './ui/shell.js';
 import { lockIfNeeded } from './features/lock.js';
+import { refreshAll } from './market.js';
 import './actions.js'; // registers the tap / input / swipe handlers
 
 async function boot() {
@@ -9,6 +10,8 @@ async function boot() {
   loadPrefs();
   lockIfNeeded();
   render(false);
+  // re-price gold / currency / crypto holdings in the background so every total is current
+  if (D.assets().some((a) => a.market_key)) refreshAll().then(() => render());
   // the offline cache would hide edits while developing on localhost
   if ('serviceWorker' in navigator && location.hostname !== 'localhost') navigator.serviceWorker.register('sw.js').catch(() => {});
 }

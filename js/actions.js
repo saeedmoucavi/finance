@@ -5,6 +5,7 @@ import * as X from './export.js';
 import { group, isFa, prefs, toLatin, tr } from './core.js';
 import { backup, pickImport, shareFile } from './features/backup.js';
 import { pinKey, pinSetup } from './features/lock.js';
+import { refreshAll } from './market.js';
 import { openAdd } from './sheets/add.js';
 import { openAdjust, openAsset } from './sheets/asset.js';
 import { openDebt, openSettle } from './sheets/debt.js';
@@ -54,6 +55,13 @@ export const A = {
   loanArchived: () => { S.loans.archived = !S.loans.archived; render(); },
   // assets & debts
   assetNew: () => openAsset(),
+  assetPeriod: (ds) => { S.assets.period = Number(ds.i); render(); },
+  async assetRefresh() {
+    S.assets.refreshing = true; render();
+    const ok = await refreshAll();
+    S.assets.refreshing = false; S.assets.offline = !ok; render();
+    if (!ok) toast(tr('prices_never'));
+  },
   assetEdit: (ds) => openAsset(D.assets().find((a) => a.id === Number(ds.id))),
   assetAdjust: (ds) => openAdjust(D.assets().find((a) => a.id === Number(ds.id)), Number(ds.s)),
   debtTab: (ds) => { S.debts.tab = Number(ds.i); render(); },
@@ -121,6 +129,9 @@ document.addEventListener('input', (e) => {
   if (el.dataset.amount) {
     v = toLatin(v).replace(/\D/g, '').slice(0, 15).replace(/^0+/, '');
     el.value = v ? group(Number(v)) : '';
+  } else if (el.dataset.dec) {
+    v = toLatin(v).replace(/[٫,]/g, '.').replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1').slice(0, 14);
+    el.value = v;
   } else if (el.dataset.int) {
     v = toLatin(v).replace(/\D/g, '').slice(0, 3);
     el.value = v;

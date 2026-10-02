@@ -54,7 +54,7 @@ svg.ic { display: block; flex-shrink: 0; fill: none; stroke: currentColor; strok
 .obtn { height: 46px; border-radius: 23px; border: 1px solid var(--hair); display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 16px; font-weight: 600; font-size: 13.5px; color: var(--accent); }
 .obtn.neg { color: var(--neg); }
 .obtn.pos { color: var(--pos); }
-.mini { padding: 4px 12px; border-radius: 15px; border: 1px solid var(--hair); font-size: 12px; font-weight: 600; color: var(--accent); }
+.mini { padding: 5px 12px; border-radius: 15px; border: 1px solid var(--hair); font-size: 12px; font-weight: 600; color: var(--accent); display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
 .link { font-size: 12px; color: var(--text2); padding: 4px 8px; border-radius: 12px; }
 
 /* ---------------------------------------------------------------- fields */
@@ -169,3 +169,15 @@ html[dir=ltr] .loanstrip { background: radial-gradient(circle at 12% 0, rgba(120
 .rise { animation: rise .55s cubic-bezier(.16, .84, .34, 1) both; }
 @keyframes rise { from { opacity: 0; transform: translateY(10px); } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; } }
+
+/* ---------------------------------------------------------------- assets */
+.seg.on-dark { background: rgba(255, 255, 255, .06); }
+.seg.on-dark button { color: rgba(255, 255, 255, .62); }
+.seg.on-dark button.on { background: rgba(255, 255, 255, .14); color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .18); }
+.badge { font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 12px; direction: ltr; }
+.badge.up { background: rgba(79, 203, 164, .16); color: #4FCBA4; }
+.badge.down { background: rgba(240, 138, 126, .16); color: #F08A7E; }
+.share { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; color: var(--text2); background: var(--field); border-radius: 10px; padding: 2px 8px; }
+.share i { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.spin svg { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }

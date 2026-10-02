@@ -76,7 +76,7 @@ export function compact(toman) {
   return sign ? isolate(sign + group(a)) : group(a);
 }
 
-export const percent = (p) => (isFa() ? digits(p) + '٪' : p + '%');
+export const percent = (p) => (isFa() ? digits(p).replace('.', prefs.faDigits ? '٫' : '.') + '٪' : p + '%');
 
 // ------------------------------------------------------------------ dates
 export function date(iso, long = true) {

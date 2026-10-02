@@ -49,6 +49,11 @@ const P = {
   backspace: 'M9 6h10.5v12H9l-5-6Z M12 9.5l5 5 M17 9.5l-5 5',
   file: 'M6.5 3.5h7l4 4v13h-11Z M13.5 3.5v4h4 M9 12.5h6 M9 16h6',
   print: 'M7 9V4h10v5 M5 9h14v7h-3 M8 16H5V9 M8 13h8v7H8Z',
+  coin: 'M4 12a8 8 0 1 0 16 0a8 8 0 1 0 -16 0 M8.5 12a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0 -7 0',
+  goldbar: 'M4.5 17.5 7.5 9.5h9l3 8Z M9.5 9.5 10.5 6.5h3l1 3',
+  banknote: 'M3 7h18v10H3Z M9.5 12a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0 M6 10v4 M18 10v4',
+  crypto: 'M12 3.5 19.5 8v8L12 20.5 4.5 16V8Z M9.5 9h4a1.5 1.5 0 0 1 0 3h-4 M9.5 12h4.5a1.5 1.5 0 0 1 0 3H9.5 M9.5 9v6',
+  refresh: 'M19 12a7 7 0 1 1-2.05-4.95 M19 4.5V8h-3.5',
 };
 
 export function ic(name, size = 20, stroke = 1.8, cls = '') {
@@ -77,4 +82,4 @@ export function forCategory(nameFa = '', nameEn = '', kind = 'expense') {
   return kind === 'income' ? 'coins' : 'other';
 }
 
-export const forAsset = (kind) => ({ bank: 'bank', cash: 'wallet', gold: 'coins', currency: 'coins', property: 'house', investment: 'chart', savings: 'safe' }[kind] || 'briefcase');
+export const forAsset = (kind) => ({ bank: 'bank', cash: 'wallet', gold: 'goldbar', coin: 'coin', currency: 'banknote', crypto: 'crypto', property: 'house', investment: 'chart', savings: 'safe' }[kind] || 'briefcase');

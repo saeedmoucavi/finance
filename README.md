@@ -16,7 +16,7 @@ The data uses the same `finance.db` format as the Windows and Android apps:
 | `index.html`, `manifest.webmanifest`, `sw.js` | page, install manifest, offline cache |
 | `css/tokens.css` | every colour, radius and size (light and dark) |
 | `css/app.css`, `css/print.css` | components and screens; printable report |
-| `js/` | data (`db.js`), formatting (`core.js`, `jalali.js`), text (`strings.js`), icons and chart colours, exports |
+| `js/` | data (`db.js`), live prices from TGJU (`market.js`), formatting (`core.js`, `jalali.js`), text (`strings.js`), icons and chart colours, exports |
 | `js/ui/`, `js/screens/`, `js/sheets/`, `js/features/` | shell and shared builders; one file per screen; forms; backup and lock |
 | `vendor/sql-wasm.*` | SQLite for the browser (sql.js 1.14.2) |
 

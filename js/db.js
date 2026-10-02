@@ -154,6 +154,10 @@ CREATE TABLE IF NOT EXISTS debts (id INTEGER PRIMARY KEY AUTOINCREMENT, directio
   counterparty TEXT NOT NULL, amount INTEGER NOT NULL, settled INTEGER NOT NULL DEFAULT 0, date TEXT NOT NULL, due_date TEXT,
   settled_date TEXT, account_id INTEGER REFERENCES accounts(id) ON DELETE SET NULL, note TEXT NOT NULL DEFAULT '',
   archived INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS prices (market_key TEXT PRIMARY KEY, title TEXT NOT NULL DEFAULT '', toman INTEGER NOT NULL,
+  change_pct REAL NOT NULL DEFAULT 0, updated_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS price_history (market_key TEXT NOT NULL, date TEXT NOT NULL, toman INTEGER NOT NULL,
+  PRIMARY KEY (market_key, date));
 CREATE INDEX IF NOT EXISTS idx_tx_date ON transactions(date);
 CREATE INDEX IF NOT EXISTS idx_tx_kind ON transactions(kind, date);
 CREATE INDEX IF NOT EXISTS idx_inst_due ON installments(due_date);
@@ -173,7 +177,7 @@ const DEFAULT_CATEGORIES = [
 ];
 const DEFAULT_SETTINGS = {
   lang: 'fa', unit: 'toman', fa_digits: '1', reminder_days: '3', reminder_on_start: '1',
-  theme: 'light', animations: '1', schema_version: '2',
+  theme: 'light', animations: '1', schema_version: '3',
 };
 export const PALETTE = ['#E8A87C', '#7FB3D5', '#A9CCE3', '#F5CBA7', '#F1948A', '#D7BDE2', '#A3E4D7', '#F9E79F'];
 
@@ -184,10 +188,23 @@ function initSchema() {
   if (!scalar('SELECT COUNT(*) FROM categories')) {
     DEFAULT_CATEGORIES.forEach((c, i) => db.run('INSERT INTO categories(name_fa, name_en, kind, color, sort) VALUES(?,?,?,?,?)', [...c, i]));
   }
+  migrate();
   if (!scalar('SELECT COUNT(*) FROM accounts')) {
     db.run("INSERT INTO accounts(name_fa, name_en, kind, sort) VALUES('نقدی', 'Cash', 'cash', 0)");
     db.run("INSERT INTO accounts(name_fa, name_en, kind, sort) VALUES('کارت بانکی', 'Bank Card', 'card', 1)");
   }
+}
+
+export const SCHEMA_VERSION = 3;
+
+/** Bring an older ledger up to date (same steps as the Windows and Android apps). */
+function migrate() {
+  const cols = (db.exec('PRAGMA table_info(assets)')[0]?.values || []).map((r) => r[1]);
+  if (!cols.includes('market_key')) db.run('ALTER TABLE assets ADD COLUMN market_key TEXT');
+  if (!cols.includes('quantity')) db.run('ALTER TABLE assets ADD COLUMN quantity REAL NOT NULL DEFAULT 0');
+  if (!cols.includes('since')) db.run('ALTER TABLE assets ADD COLUMN since TEXT');
+  const v = Number(scalar("SELECT value FROM settings WHERE key = 'schema_version'")) || 1;
+  if (v < SCHEMA_VERSION) db.run("INSERT OR REPLACE INTO settings(key, value) VALUES('schema_version', ?)", [String(SCHEMA_VERSION)]);
 }
 
 // ------------------------------------------------------------------ settings
@@ -335,30 +352,46 @@ export const payInstallment = (id, paid, date, accountId, note = '') => run(
   [paid, paid > 0 ? date : null, accountId, note, id]);
 
 // ------------------------------------------------------------------ assets
+// An asset is either "manual" (amount typed by the user, in Toman) or a market
+// holding: market_key (a TGJU item id) + quantity. A market holding's amount is
+// kept equal to quantity × the latest price, so every total stays current.
 export const assets = () => q('SELECT * FROM assets WHERE archived = 0 ORDER BY sort, id');
+export const asset = (id) => one('SELECT * FROM assets WHERE id = ?', [id]);
 export const assetsTotal = () => scalar('SELECT COALESCE(SUM(amount), 0) FROM assets WHERE archived = 0');
-export function addAsset(name, kind, amount, note) {
+
+export function addAsset(name, kind, amount, note, marketKey = null, quantity = 0, since = null) {
   tx(() => {
     const today = J.todayIso();
     const sort = scalar('SELECT COALESCE(MAX(sort), 0) + 1 FROM assets');
-    db.run('INSERT INTO assets(name, kind, amount, note, sort, updated_at, created_at) VALUES(?,?,?,?,?,?,?)', [name, kind, amount, note, sort, today, today]);
+    db.run(`INSERT INTO assets(name, kind, amount, note, sort, updated_at, created_at, market_key, quantity, since)
+            VALUES(?,?,?,?,?,?,?,?,?,?)`, [name, kind, amount, note, sort, today, today, marketKey, quantity, since || today]);
     const id = scalar('SELECT last_insert_rowid()');
-    if (amount) db.run('INSERT INTO asset_history(asset_id, date, old_amount, new_amount, note) VALUES(?,?,?,?,?)', [id, today, 0, amount, note]);
+    if (amount) db.run('INSERT INTO asset_history(asset_id, date, old_amount, new_amount, note) VALUES(?,?,?,?,?)', [id, since || today, 0, amount, note]);
   });
 }
-export function updateAsset(id, name, kind, amount, note) {
+export function updateAsset(id, name, kind, amount, note, marketKey = null, quantity = 0, since = null) {
   tx(() => {
     const today = J.todayIso();
     const old = scalar('SELECT amount FROM assets WHERE id = ?', [id]);
-    db.run('UPDATE assets SET name=?, kind=?, amount=?, note=?, updated_at=? WHERE id=?', [name, kind, amount, note, today, id]);
-    if (old !== amount) db.run('INSERT INTO asset_history(asset_id, date, old_amount, new_amount, note) VALUES(?,?,?,?,?)', [id, today, old, amount, note]);
+    db.run('UPDATE assets SET name=?, kind=?, amount=?, note=?, updated_at=?, market_key=?, quantity=?, since=? WHERE id=?',
+      [name, kind, amount, note, today, marketKey, quantity, since, id]);
+    if (old !== amount && !marketKey) db.run('INSERT INTO asset_history(asset_id, date, old_amount, new_amount, note) VALUES(?,?,?,?,?)', [id, today, old, amount, note]);
   });
 }
+/** Manual asset: add / remove Toman. Market holding: add / remove quantity (delta is then a quantity). */
 export function adjustAsset(id, delta, date, note) {
   tx(() => {
-    const old = scalar('SELECT amount FROM assets WHERE id = ?', [id]);
-    db.run('UPDATE assets SET amount = ?, updated_at = ? WHERE id = ?', [old + delta, date, id]);
-    db.run('INSERT INTO asset_history(asset_id, date, old_amount, new_amount, note) VALUES(?,?,?,?,?)', [id, date, old, old + delta, note]);
+    const a = asset(id);
+    if (a.market_key) {
+      const qty = Math.max(0, a.quantity + delta);
+      const price = scalar('SELECT toman FROM prices WHERE market_key = ?', [a.market_key]) || (a.quantity ? a.amount / a.quantity : 0);
+      const amount = Math.round(qty * price);
+      db.run('UPDATE assets SET quantity = ?, amount = ?, updated_at = ? WHERE id = ?', [qty, amount, date, id]);
+      db.run('INSERT INTO asset_history(asset_id, date, old_amount, new_amount, note) VALUES(?,?,?,?,?)', [id, date, a.amount, amount, note]);
+    } else {
+      db.run('UPDATE assets SET amount = ?, updated_at = ? WHERE id = ?', [a.amount + delta, date, id]);
+      db.run('INSERT INTO asset_history(asset_id, date, old_amount, new_amount, note) VALUES(?,?,?,?,?)', [id, date, a.amount, a.amount + delta, note]);
+    }
   });
 }
 export function deleteAsset(id) {
@@ -368,6 +401,32 @@ export function deleteAsset(id) {
   });
 }
 export const assetHistory = (id) => q('SELECT * FROM asset_history WHERE asset_id = ? ORDER BY date DESC, id DESC LIMIT 30', [id]);
+export const assetHistoryAll = () => q('SELECT * FROM asset_history ORDER BY date, id');
+
+// ------------------------------------------------------------------ market prices
+export const prices = () => Object.fromEntries(q('SELECT * FROM prices').map((r) => [r.market_key, r]));
+export function savePrices(rows, updatedAt) {
+  tx(() => {
+    for (const r of rows) {
+      db.run('INSERT OR REPLACE INTO prices(market_key, title, toman, change_pct, updated_at) VALUES(?,?,?,?,?)',
+        [r.key, r.title || '', r.toman, r.change || 0, updatedAt]);
+    }
+  });
+}
+/** Re-price every market holding from the stored prices. */
+export function revalueAssets() {
+  tx(() => {
+    db.run(`UPDATE assets SET amount = CAST(ROUND(quantity * (SELECT toman FROM prices p WHERE p.market_key = assets.market_key)) AS INTEGER)
+            WHERE market_key IS NOT NULL AND EXISTS (SELECT 1 FROM prices p WHERE p.market_key = assets.market_key)`);
+  });
+}
+export function saveHistory(key, points) {
+  tx(() => {
+    for (const [date, toman] of points) db.run('INSERT OR REPLACE INTO price_history(market_key, date, toman) VALUES(?,?,?)', [key, date, toman]);
+  });
+}
+export const priceHistory = (key) => q('SELECT date, toman FROM price_history WHERE market_key = ? ORDER BY date', [key]);
+export const historyLastDate = (key) => scalar('SELECT MAX(date) FROM price_history WHERE market_key = ?', [key]) || '';
 
 // ------------------------------------------------------------------ debts
 export const debts = (direction) => q(

@@ -1,6 +1,6 @@
 // Offline support: every file of the app is cached on install, so it opens
 // without internet. Bump VERSION on each release so phones fetch the new files.
-const VERSION = 'pfd-v2';
+const VERSION = 'pfd-v3';
 const FILES = [
   './',
   'index.html',
@@ -15,6 +15,7 @@ const FILES = [
   'js/icons.js',
   'js/jalali.js',
   'js/main.js',
+  'js/market.js',
   'js/strings.js',
   'js/theme.js',
   'js/features/backup.js',
@@ -56,8 +57,9 @@ self.addEventListener('activate', (e) => {
   e.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== VERSION).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
 });
 
-// cache first; the network is only used for anything not cached yet
+// cache first; the network is only used for anything not cached yet.
+// Other sites (live prices from api.tgju.org) always go straight to the network.
 self.addEventListener('fetch', (e) => {
-  if (e.request.method !== 'GET') return;
+  if (e.request.method !== 'GET' || new URL(e.request.url).origin !== self.location.origin) return;
   e.respondWith(caches.match(e.request, { ignoreSearch: true }).then((hit) => hit || fetch(e.request)));
 });

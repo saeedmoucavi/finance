@@ -16,3 +16,11 @@ export function shade(hex, k = 0.38) {
   return '#' + c.map((v) => v.toString(16).padStart(2, '0')).join('');
 }
 export const alpha = (hex, a) => hex + Math.round(a * 255).toString(16).padStart(2, '0');
+
+/** Asset groups: [chip background alpha base, ink]. Market groups first, then manual kinds. */
+export const ASSET_COLORS = {
+  gold: '#E3C06A', coin: '#D9A84E', currency: '#4FCBA4', crypto: '#7FA7E0',
+  savings: '#9AA3AE', bank: '#7FA7E0', cash: '#4FCBA4', property: '#B39DDB', investment: '#F08A7E', other: '#9AA3AE',
+};
+/** The asset value chart. */
+export const CHART_LINE = '#8FB0EA';

@@ -3,6 +3,7 @@ import * as D from '../db.js';
 import { amount, isFa, prefs, tr } from '../core.js';
 import { ic } from '../icons.js';
 import { renderLock } from '../features/lock.js';
+import { startAutoRefresh, stopAutoRefresh } from '../market.js';
 import { SCREENS } from '../screens/index.js';
 import { layers, pop } from './layers.js';
 import { $app, S, TABS } from './state.js';
@@ -37,12 +38,15 @@ export function render(keepScroll = true) {
   window.scrollTo(0, y);
   S.last = cur;
   runCounters();
+  // live prices while the assets screen is open
+  if (cur === 'assets') startAutoRefresh(() => S.stack[S.stack.length - 1] === 'assets' && !document.hidden && !S.locked, (ok) => { S.assets.offline = !ok; render(); });
+  else stopAutoRefresh();
 }
 
 export function navHtml(cur) {
   const it = (id, icon, label) => `<button class="it ${cur === id ? 'on' : ''}" data-a="go" data-s="${id}">${ic(icon, 23, cur === id ? 2 : 1.8)}<span>${tr(label)}</span><span class="ln"></span></button>`;
   return `<nav class="nav"><button class="fab" data-a="add" aria-label="+">${ic('plus', 24, 2.2)}</button><div class="in">
-    ${it('home', 'home', 'nav_home')}${it('tx', 'receipt', 'nav_tx')}<span style="width:56px"></span>${it('loans', 'bank', 'nav_loans')}${it('more', 'more', 'nav_more')}</div></nav>`;
+    ${it('home', 'home', 'nav_home')}${it('tx', 'receipt', 'nav_tx')}<span style="width:56px"></span>${it('assets', 'safe', 'nav_assets')}${it('more', 'more', 'nav_more')}</div></nav>`;
 }
 
 /** Amounts with data-count roll up from their previous value. */
