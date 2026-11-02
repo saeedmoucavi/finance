@@ -768,6 +768,58 @@ export const TEXT = {
   "برنامه قفل است",
   "The app is locked"
  ],
+ "loan_plan": [
+  "برنامه اقساط",
+  "Payment plan"
+ ],
+ "plan_by_month": [
+  "به تفکیک ماه",
+  "By month"
+ ],
+ "plan_by_year": [
+  "به تفکیک سال",
+  "By year"
+ ],
+ "plan_paid": [
+  "پرداخت‌شده",
+  "Paid"
+ ],
+ "plan_left": [
+  "مانده",
+  "Left"
+ ],
+ "plan_left_long": [
+  "مانده برای پرداخت",
+  "Left to pay"
+ ],
+ "plan_overdue": [
+  "معوق",
+  "Overdue"
+ ],
+ "plan_upcoming": [
+  "پیش رو",
+  "Upcoming"
+ ],
+ "plan_done": [
+  "پرداخت شد",
+  "Paid"
+ ],
+ "plan_none": [
+  "قسطی ندارد",
+  "No installments"
+ ],
+ "plan_all": [
+  "همه وام‌ها",
+  "All loans"
+ ],
+ "plan_this_year": [
+  "امسال",
+  "This year"
+ ],
+ "plan_year_hint": [
+  "برای دیدن ماه‌های هر سال، روی آن سال بزنید.",
+  "Tap a year to see its months."
+ ],
  "monthly": [
   "ماهانه",
   "Monthly"

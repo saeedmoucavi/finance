@@ -12,6 +12,7 @@ export const S = {
   tx: { filter: 0, ym: null, q: '', searching: false, cat: null },
   loans: { archived: false, open: undefined, all: {} },
   rep: { yearly: 0, ym: null },
+  plan: { yearly: 0, year: null, open: null },
   debts: { tab: 0 }, lists: { tab: 0 },
   assets: { period: 1, offline: false, refreshing: false },
   locked: false, hiddenAt: 0, dark: false,

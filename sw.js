@@ -25,6 +25,7 @@ const FILES = [
   'js/screens/home.js',
   'js/screens/index.js',
   'js/screens/lists.js',
+  'js/screens/loanplan.js',
   'js/screens/loans.js',
   'js/screens/more.js',
   'js/screens/reports.js',

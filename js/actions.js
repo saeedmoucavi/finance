@@ -68,6 +68,11 @@ export const A = {
   debtNew: () => openDebt(),
   debtEdit: (ds) => openDebt([...D.debts('receivable'), ...D.debts('payable')].find((d) => d.id === Number(ds.id))),
   debtSettle: (ds) => openSettle([...D.debts('receivable'), ...D.debts('payable')].find((d) => d.id === Number(ds.id))),
+  // payment plan
+  planYearly: (ds) => { S.plan.yearly = Number(ds.i); render(); },
+  planShift: (ds) => { S.plan.year += Number(ds.n); S.plan.open = null; render(); },
+  planOpen: (ds) => { S.plan.open = S.plan.open === ds.k ? null : ds.k; render(); },
+  planYear: (ds) => { S.plan.year = Number(ds.y); S.plan.yearly = 0; S.plan.open = null; render(); },
   // reports
   repYearly: (ds) => { S.rep.yearly = Number(ds.i); render(); },
   repShift: (ds) => { S.rep.ym = J.addMonths(S.rep.ym[0], S.rep.ym[1], Number(ds.n) * (S.rep.yearly ? 12 : 1)); render(); },

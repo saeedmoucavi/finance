@@ -8,8 +8,10 @@ import { debtsScreen } from './debts.js';
 import { reportsScreen } from './reports.js';
 import { listsScreen } from './lists.js';
 import { settingsScreen } from './settings.js';
+import { loanPlanScreen } from './loanplan.js';
 
 export const SCREENS = {
   home: homeScreen, tx: transactionsScreen, loans: loansScreen, more: moreScreen,
   assets: assetsScreen, debts: debtsScreen, reports: reportsScreen, lists: listsScreen, settings: settingsScreen,
+  loanplan: loanPlanScreen,
 };
