@@ -128,6 +128,11 @@ html[dir=ltr] .loanstrip { background: radial-gradient(circle at 12% 0, rgba(120
 .sheet { width: 100%; max-width: var(--max-width); max-height: calc(100% - var(--safe-top) - 12px); overflow-y: auto; background: var(--card); border-radius: var(--r-sheet) var(--r-sheet) 0 0;
   padding: 10px 18px calc(20px + var(--safe-bottom)); display: flex; flex-direction: column; gap: 12px; overscroll-behavior: contain; }
 .layer.enter .sheet { animation: up .3s cubic-bezier(.16, .84, .34, 1) both; }
+/* the save button stays in reach at the foot of a long sheet; the card-coloured halo hides what scrolls under it */
+.sheet > .btn { position: sticky; bottom: calc(6px + var(--safe-bottom)); z-index: 2; flex-shrink: 0; height: 56px; border-radius: 28px; font-size: 16px;
+  box-shadow: 0 0 0 18px var(--card), 0 18px 0 18px var(--card); }
+/* see-through would show the keypad behind it, so a disabled save is drawn solid */
+.sheet > .btn:disabled { opacity: 1; background: var(--field); color: var(--text2); }
 .sheet .handle { width: 40px; height: 4px; border-radius: 2px; background: var(--hair); align-self: center; }
 .sheet h2, .dialog h2 { margin: 0; font-size: 17px; font-weight: 700; flex: 1; }
 .dialog { width: 100%; max-width: 380px; max-height: 90%; overflow-y: auto; background: var(--card); border-radius: var(--r-dialog); padding: 22px; display: flex; flex-direction: column; gap: 12px; }
