@@ -29,8 +29,12 @@ export const TEXT = {
   "finances"
  ],
  "month_balance": [
-  "مانده این ماه",
-  "This month's balance"
+  "مانده",
+  "Balance"
+ ],
+ "from_last_month": [
+  "از ماه قبل",
+  "From last month"
  ],
  "this_month": [
   "این ماه",

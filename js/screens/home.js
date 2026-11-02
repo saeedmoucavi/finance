@@ -13,6 +13,9 @@ export const homeScreen = () => {
   const [py, pm] = J.addMonths(ty, tm, -1);
   const [ps, pe] = J.monthRange(py, pm);
   const tot = D.totals(ms, me);
+  // what was left at the end of last month carries into this month's balance
+  const carry = D.totals('0000-01-01', me).net - tot.net;
+  const balance = carry + tot.net;
   const prev = D.totals(ps, pe).expense;
   const lt = D.loanTotals(ms, me);
   const up = D.upcoming(30).slice(0, 4);
@@ -39,9 +42,9 @@ export const homeScreen = () => {
       <span class="lbl grow">${tr('month_balance')}</span>${ring('arrow_out', 'go', 'data-s="reports"', 'dark')}</div>
     <div class="row" style="gap:12px;margin-top:6px">
       <div class="grow col">
-        <div class="big num" data-count="${tot.net}" data-key="net">${amount(S.counts.net ?? 0)}</div>
+        <div class="big num" data-count="${balance}" data-key="net">${amount(S.counts.net ?? 0)}</div>
         <div class="lbl" style="margin-bottom:10px">${unitLabel()}</div>
-        <div class="col" style="gap:6px">${legend(FLOW.income, tr('income'), amount(tot.income))}${legend(FLOW.expense, tr('expenses'), amount(tot.expense))}${legend(FLOW.installments, tr('installments'), amount(tot.installments))}</div>
+        <div class="col" style="gap:6px">${legend('#C7CED6', tr('from_last_month'), amount(carry))}${legend(FLOW.income, tr('income'), amount(tot.income))}${legend(FLOW.expense, tr('expenses'), amount(tot.expense))}${legend(FLOW.installments, tr('installments'), amount(tot.installments))}</div>
       </div>
       ${donut([tot.income, tot.expense, tot.installments], [FLOW.income, FLOW.expense, FLOW.installments], 118, 14, 'rgba(255,255,255,.09)', `<span class="lbl" style="font-size:11px">${tr('this_month')}</span>`)}
     </div>
