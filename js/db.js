@@ -268,6 +268,11 @@ export function reportTotals(start, end) {
   return { ...t, paid: t.installments, due, installments, net: t.income - t.expense - installments };
 }
 
+/** How many transactions each category has, so forms can offer the most used first. */
+export const categoryUse = (kind) => new Map(q(
+  'SELECT category_id AS id, COUNT(*) AS n FROM transactions WHERE kind = ? AND category_id IS NOT NULL GROUP BY category_id',
+  [kind]).map((r) => [r.id, r.n]));
+
 export const breakdown = (start, end, kind = 'expense') => q(
   `SELECT c.id AS cid, c.name_fa, c.name_en, c.color, COALESCE(SUM(t.amount), 0) AS total
    FROM transactions t LEFT JOIN categories c ON c.id = t.category_id

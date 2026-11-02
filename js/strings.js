@@ -60,6 +60,14 @@ export const TEXT = {
   "اقساط پرداختی",
   "Installments paid"
  ],
+ "other_cats": [
+  "دسته دیگر",
+  "More categories"
+ ],
+ "fewer_cats": [
+  "بستن",
+  "Fewer"
+ ],
  "installments_due": [
   "اقساط پرداخت‌نشده",
   "Unpaid installments"

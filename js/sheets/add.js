@@ -18,8 +18,12 @@ export function openAdd(mode = 'expense', tx = null) {
     date: tx ? tx.date : J.todayIso(), note: tx ? tx.note : '', inst: null,
     render(L) {
       const kind = L.mode === 1 ? 'income' : 'expense';
-      const cats = D.categories(kind);
+      // most used first; only the top three show until the user asks for the rest
+      const use = D.categoryUse(kind);
+      const cats = D.categories(kind).sort((a, b) => (use.get(b.id) || 0) - (use.get(a.id) || 0));
       if (!cats.some((c) => c.id === L.cat)) L.cat = cats[0]?.id ?? null;
+      let shown = L.allCats ? cats : cats.slice(0, 3);
+      if (!shown.some((c) => c.id === L.cat)) shown = [...shown, cats.find((c) => c.id === L.cat)];
       const modes = L.tx ? [tr('expense'), tr('income')] : [tr('expense'), tr('income'), tr('pay_inst')];
       let mid;
       if (L.mode === 2) {
@@ -29,7 +33,8 @@ export function openAdd(mode = 'expense', tx = null) {
           <div class="muted" style="font-size:11px">${t('inst_n', num(i.seq))} · ${dayMonth(i.due_date)}</div></div><span class="b" style="font-size:13px">${amount(i.amount - i.paid)}</span></div>`).join('')
           : hint(tr('no_open_inst'));
       } else {
-        mid = `<div class="wrap">${cats.map((c) => pick(catName(c), c.id === L.cat, '.pickCat', `data-id="${c.id}"`, forCategory(c.name_fa, c.name_en, c.kind))).join('')}</div>`;
+        mid = `<div class="wrap">${shown.map((c) => pick(catName(c), c.id === L.cat, '.pickCat', `data-id="${c.id}"`, forCategory(c.name_fa, c.name_en, c.kind))).join('')}${
+          cats.length > 3 ? pick(tr(L.allCats ? 'fewer_cats' : 'other_cats'), false, '.toggleCats', '', L.allCats ? 'up' : 'more') : ''}</div>`;
       }
       return `${sheetHead(tr(L.tx ? 'edit_tx' : 'new_tx'))}
         ${seg(modes, L.mode, '.setMode')}
@@ -44,8 +49,9 @@ export function openAdd(mode = 'expense', tx = null) {
         <button class="btn" id="save" data-a=".save" ${canSave(L) ? '' : 'disabled'}>${tr('save')}</button>
         ${L.tx ? `<button class="obtn neg" data-a=".del">${ic('trash', 17)}${tr('delete')}</button>` : ''}`;
     },
-    setMode(ds) { this.mode = Number(ds.i); this.inst = null; renderLayers(); },
-    pickCat(ds) { this.cat = Number(ds.id); renderLayers(); },
+    setMode(ds) { this.mode = Number(ds.i); this.inst = null; this.allCats = false; renderLayers(); },
+    pickCat(ds) { this.cat = Number(ds.id); this.allCats = false; renderLayers(); },
+    toggleCats() { this.allCats = !this.allCats; renderLayers(); },
     pickAcc(ds) { this.acc = Number(ds.id); renderLayers(); },
     pickInst(ds) {
       this.inst = D.installment(Number(ds.id));
