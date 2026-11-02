@@ -14,13 +14,23 @@ export function pop() { layers.pop(); renderLayers(); }
 export function closeAll() { layers = []; renderLayers(); }
 
 export function renderLayers() {
-  const scrolls = [...$layers.children].map((c) => c.firstElementChild?.scrollTop || 0);
+  const body = (c) => c.querySelector('.sheet-body, .dialog');
+  const scrolls = [...$layers.children].map((c) => body(c)?.scrollTop || 0);
   $layers.innerHTML = layers.map((L, i) => {
     const inner = L.render(L);
-    const box = L.dialog ? `<div class="dialog">${inner}</div>` : `<div class="sheet"><div class="handle"></div>${inner}</div>`;
+    const box = L.dialog ? `<div class="dialog">${inner}</div>` : `<div class="sheet"><div class="sheet-body"><div class="handle"></div>${inner}</div></div>`;
     return `<div class="layer ${L.dialog ? 'dlg' : ''} ${L.shown ? '' : 'enter'}" data-layer="${i}">${box}</div>`;
   }).join('');
-  [...$layers.children].forEach((c, i) => { if (scrolls[i]) c.firstElementChild.scrollTop = scrolls[i]; });
+  // the save button goes in a footer outside the scrolling part, so nothing in the form can end up under it
+  $layers.querySelectorAll('.sheet-body').forEach((b) => {
+    const save = b.querySelector(':scope > .btn');
+    if (!save) return;
+    const foot = document.createElement('div');
+    foot.className = 'sheet-foot';
+    foot.append(save);
+    b.after(foot);
+  });
+  [...$layers.children].forEach((c, i) => { if (scrolls[i]) body(c).scrollTop = scrolls[i]; });
   layers.forEach((L) => { L.shown = true; });
   document.body.style.overflow = layers.length ? 'hidden' : '';
 }
