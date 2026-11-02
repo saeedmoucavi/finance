@@ -21,6 +21,7 @@ export const reportsScreen = () => {
   ${seg([tr('monthly'), tr('yearly')], st.yearly, 'repYearly')}
   <div class="row">${ring(rtl() ? 'chev_right' : 'chev_left', 'repShift', 'data-n="-1"', 'sm')}<div class="grow center b" style="font-size:15px">${label}</div>${ring(rtl() ? 'chev_left' : 'chev_right', 'repShift', 'data-n="1"', 'sm')}</div>
   <div class="card row" style="gap:14px"><div class="grow col" style="gap:8px;font-size:12.5px">${lg(FLOW.income, tr('income'), r.totals.income)}${lg(FLOW.expense, tr('expenses'), r.totals.expense)}${lg(FLOW.installments, tr('installments'), r.totals.installments)}
+    ${r.totals.due > 0 ? `<div class="muted" style="font-size:11px;margin-top:-4px">${tr('installments_due')}: ${amount(r.totals.due)}</div>` : ''}
     <div class="divider"></div><div class="row"><span class="b grow">${tr('balance')}</span><span class="b ${r.totals.net < 0 ? 'neg' : 'pos'}">${amount(r.totals.net)}</span></div></div>
     ${donut([r.totals.income, r.totals.expense, r.totals.installments], [FLOW.income, FLOW.expense, FLOW.installments], 96, 12, 'var(--track)')}</div>
   <div class="card"><div class="b" style="font-size:13.5px;margin-bottom:6px">${tr('position')}</div>

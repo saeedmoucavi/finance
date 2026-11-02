@@ -60,6 +60,10 @@ export const TEXT = {
   "اقساط پرداختی",
   "Installments paid"
  ],
+ "installments_due": [
+  "اقساط پرداخت‌نشده",
+  "Unpaid installments"
+ ],
  "loan_debt": [
   "بدهی وام‌ها",
   "Loan debt"

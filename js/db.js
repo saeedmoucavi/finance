@@ -259,6 +259,15 @@ export function totals(start, end) {
   return { income, expense, installments, net: income - expense - installments };
 }
 
+/** Totals for a report: installments paid in the period plus whatever is still unpaid of the ones due in it,
+ *  so a future month shows the installments that are coming. */
+export function reportTotals(start, end) {
+  const t = totals(start, end);
+  const due = scalar('SELECT SUM(amount - paid) FROM installments WHERE paid < amount AND due_date BETWEEN ? AND ?', [start, end]);
+  const installments = t.installments + due;
+  return { ...t, paid: t.installments, due, installments, net: t.income - t.expense - installments };
+}
+
 export const breakdown = (start, end, kind = 'expense') => q(
   `SELECT c.id AS cid, c.name_fa, c.name_en, c.color, COALESCE(SUM(t.amount), 0) AS total
    FROM transactions t LEFT JOIN categories c ON c.id = t.category_id

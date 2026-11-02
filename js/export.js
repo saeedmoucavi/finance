@@ -8,7 +8,7 @@ import { prefs, tr, t, isFa, amount, percent, unitLabel, toDisplay, date, esc, n
 export function reportData(start, end, label) {
   const [ty, tm] = J.today();
   const [ms, me] = J.monthRange(ty, tm);
-  const totals = D.totals(start, end);
+  const totals = D.reportTotals(start, end);
   const assets = D.assetsTotal();
   const receivable = D.debtsOutstanding('receivable');
   const payable = D.debtsOutstanding('payable');
@@ -128,7 +128,7 @@ export function excel(r) {
   s1.row([tr('report_title')], 4).row([tr('period'), r.label]).row([tr('unit'), unitLabel()]).row([])
     .row([tr('item'), tr('amount')], 1)
     .row([tr('income'), n(r.totals.income)]).row([tr('expenses'), n(r.totals.expense)])
-    .row([tr('installments_paid'), n(r.totals.installments)]).row([tr('balance'), n(r.totals.net)]).row([])
+    .row([tr('installments_paid'), n(r.totals.paid)]).row([tr('installments_due'), n(r.totals.due)]).row([tr('balance'), n(r.totals.net)]).row([])
     .row([tr('position'), tr('amount')], 1)
     .row([tr('assets_total'), n(r.assets)]).row([tr('final_total'), n(r.final)]).row([tr('receivables'), n(r.receivable)])
     .row([tr('payables'), n(r.payable)]).row([tr('loan_debt'), n(r.loanDebt)]).row([tr('net_worth'), n(r.netWorth)]);
@@ -195,7 +195,7 @@ export function calendar() {
 // ------------------------------------------------------------------ printable report
 export function reportHtml(r) {
   const kv = [
-    [tr('income'), r.totals.income], [tr('expenses'), r.totals.expense], [tr('installments_paid'), r.totals.installments],
+    [tr('income'), r.totals.income], [tr('expenses'), r.totals.expense], [tr('installments_paid'), r.totals.paid], [tr('installments_due'), r.totals.due],
     [tr('balance'), r.totals.net], [tr('assets_total'), r.assets], [tr('final_total'), r.final],
     [tr('receivables'), r.receivable], [tr('payables'), r.payable], [tr('loan_debt'), r.loanDebt], [tr('net_worth'), r.netWorth],
   ];

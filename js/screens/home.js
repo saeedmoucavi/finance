@@ -7,14 +7,17 @@ import { BAR_COLORS, FLOW, alpha, loanColor, shade } from '../theme.js';
 import { catName, chip, donut, hint, legend, pill, ring } from '../ui/kit.js';
 import { S } from '../ui/state.js';
 
+// the balance on the home card is counted from this day on
+const BALANCE_START = J.monthRange(1405, 7)[0];
+
 export const homeScreen = () => {
   const [ty, tm] = J.today();
   const [ms, me] = J.monthRange(ty, tm);
   const [py, pm] = J.addMonths(ty, tm, -1);
   const [ps, pe] = J.monthRange(py, pm);
   const tot = D.totals(ms, me);
-  // what was left at the end of last month carries into this month's balance
-  const carry = D.totals('0000-01-01', me).net - tot.net;
+  // what was left at the end of last month carries into this month's balance (counted from Mehr 1405)
+  const carry = ms > BALANCE_START ? D.totals(BALANCE_START, pe).net : 0;
   const balance = carry + tot.net;
   const prev = D.totals(ps, pe).expense;
   const lt = D.loanTotals(ms, me);
