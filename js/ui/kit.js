@@ -125,13 +125,13 @@ export function lineChart(series, color, { w = 340, h = 190 } = {}) {
   for (let k = 0; k <= 4; k++) {
     const v = base + ((top - base) * k) / 4;
     const yy = y(v).toFixed(1);
-    grid += `<line x1="${pad.l}" x2="${w - pad.r}" y1="${yy}" y2="${yy}" stroke="rgba(255,255,255,${k ? 0.07 : 0.18})"/>`;
-    grid += `<text x="${pad.l - 8}" y="${yy}" text-anchor="end" dominant-baseline="middle" font-size="9.5" fill="rgba(255,255,255,.55)" font-family="Vazir">${esc(v ? compact(v) : num(0))}</text>`;
+    grid += `<line x1="${pad.l}" x2="${w - pad.r}" y1="${yy}" y2="${yy}" stroke="currentColor" stroke-opacity="${k ? 0.07 : 0.18}"/>`;
+    grid += `<text x="${pad.l - 8}" y="${yy}" text-anchor="end" dominant-baseline="middle" font-size="9.5" fill="currentColor" fill-opacity=".55" font-family="Vazir">${esc(v ? compact(v) : num(0))}</text>`;
   }
   const lx = x(values.length - 1);
   const ly = y(values[values.length - 1]);
   const mid = Math.floor(dates.length / 2);
-  const xl = (i, anchor) => `<text x="${x(i).toFixed(1)}" y="${h - 6}" text-anchor="${anchor}" font-size="9.5" fill="rgba(255,255,255,.55)" font-family="Vazir">${dayMonth(dates[i])}</text>`;
+  const xl = (i, anchor) => `<text x="${x(i).toFixed(1)}" y="${h - 6}" text-anchor="${anchor}" font-size="9.5" fill="currentColor" fill-opacity=".55" font-family="Vazir">${dayMonth(dates[i])}</text>`;
   return `<svg class="linechart" viewBox="0 0 ${w} ${h}" width="100%" style="display:block;direction:ltr">
     <defs><linearGradient id="lcg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".38"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
     ${grid}<path d="${area}" fill="url(#lcg)"/><path d="${line}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>

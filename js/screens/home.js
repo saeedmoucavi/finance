@@ -49,7 +49,7 @@ export const homeScreen = () => {
         <div class="lbl" style="margin-bottom:10px">${unitLabel()}</div>
         <div class="col" style="gap:6px">${legend('#C7CED6', tr('from_last_month'), amount(carry))}${legend(FLOW.income, tr('income'), amount(tot.income))}${legend(FLOW.expense, tr('expenses'), amount(tot.expense))}${legend(FLOW.installments, tr('installments'), amount(tot.installments))}</div>
       </div>
-      ${donut([tot.income, tot.expense, tot.installments], [FLOW.income, FLOW.expense, FLOW.installments], 118, 14, 'rgba(255,255,255,.09)', `<span class="lbl" style="font-size:11px">${tr('this_month')}</span>`)}
+      ${donut([tot.income, tot.expense, tot.installments], [FLOW.income, FLOW.expense, FLOW.installments], 118, 14, 'var(--hero-tint)', `<span class="lbl" style="font-size:11px">${tr('this_month')}</span>`)}
     </div>
   </div>
   <div class="loanstrip rise" style="animation-delay:.1s" data-a="go" data-s="loans">

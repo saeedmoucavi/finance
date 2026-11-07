@@ -15,6 +15,13 @@
   --nav: #FFFFFF; --nav-active: #2E3440; --fab-top: #3A414F; --fab-bottom: #2E3440; --fab-icon: #FFFFFF;
   --shadow: 0 10px 26px rgba(50, 56, 72, .08); --scrim: rgba(20, 23, 30, .38);
   --pill-bg: linear-gradient(#3A414F, #2E3440);
+  /* the dark headline card (hero) and the loan strip: ink, hairlines and faint fills drawn on them */
+  --hero-ink: #FFFFFF; --hero-line: rgba(255, 255, 255, .28); --hero-tint: rgba(255, 255, 255, .10);
+  --pill-track-on: rgba(0, 0, 0, .28); --pill-fill-on: linear-gradient(90deg, #9AA3AE, #E3E7EC);
+  --strip-bg: radial-gradient(circle at 88% 0, rgba(120, 143, 210, .45), transparent 55%), linear-gradient(160deg, #3A3F4B, #1B1E25);
+  --strip-bg-ltr: radial-gradient(circle at 12% 0, rgba(120, 143, 210, .45), transparent 55%), linear-gradient(160deg, #3A3F4B, #1B1E25);
+  --strip-ink: #FFFFFF; --strip-muted: rgba(255, 255, 255, .65); --strip-line: rgba(255, 255, 255, .22); --strip-tint: rgba(255, 255, 255, .10);
+  --card-border: 0 solid transparent; --nav-shadow: 0 -8px 24px rgba(30, 35, 48, .07);
   --safe-top: env(safe-area-inset-top); --safe-bottom: env(safe-area-inset-bottom);
   color-scheme: light;
 }

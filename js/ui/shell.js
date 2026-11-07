@@ -5,6 +5,7 @@ import { ic } from '../icons.js';
 import { renderLock } from '../features/lock.js';
 import { startAutoRefresh, stopAutoRefresh } from '../market.js';
 import { SCREENS } from '../screens/index.js';
+import { resolveSkin } from '../theme.js';
 import { layers, pop } from './layers.js';
 import { $app, S, TABS } from './state.js';
 
@@ -21,10 +22,12 @@ export function loadPrefs() {
 }
 
 export function applyTheme() {
-  const sys = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  S.dark = prefs.theme === 'dark' || (prefs.theme === 'auto' && sys);
-  document.documentElement.dataset.theme = S.dark ? 'dark' : 'light';
-  document.querySelector('meta[name=theme-color]').content = S.dark ? '#121419' : '#ECEDEF';
+  const skin = resolveSkin(prefs.theme, window.matchMedia('(prefers-color-scheme: dark)').matches);
+  S.dark = skin.dark;
+  S.skin = skin.id;
+  document.documentElement.dataset.theme = skin.dark ? 'dark' : 'light';
+  document.documentElement.dataset.skin = skin.id;
+  document.querySelector('meta[name=theme-color]').content = skin.bar;
 }
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => { applyTheme(); render(); });
 

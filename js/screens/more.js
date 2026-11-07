@@ -3,6 +3,8 @@ import * as D from '../db.js';
 import * as J from '../jalali.js';
 import { compact, isFa, prefs, tr, unitLabel } from '../core.js';
 import { chip, toggle, topbar } from '../ui/kit.js';
+import { S } from '../ui/state.js';
+import { themeKey } from './settings.js';
 
 export const moreScreen = () => {
   const [ty, tm] = J.today();
@@ -25,7 +27,7 @@ export const moreScreen = () => {
     ${menu('list', tr('lists'), tr('lists_sub'), 'go', 'data-s="lists"')}
   </div>
   <div class="card tight">
-    ${menu('moon', tr('appearance'), tr('appearance_sub'), 'go', 'data-s="settings"', `<span class="t2" style="font-size:12px">${tr('theme_' + prefs.theme)}</span>`)}<div class="divider"></div>
+    ${menu('moon', tr('appearance'), tr('appearance_sub'), 'go', 'data-s="settings"', `<span class="t2" style="font-size:12px">${tr(themeKey(S.skin))}</span>`)}<div class="divider"></div>
     ${menu('globe', tr('lang_unit'), (isFa() ? 'فارسی' : 'English') + ' · ' + unitLabel(), 'go', 'data-s="settings"')}<div class="divider"></div>
     ${menu('lock', tr('pin_lock'), tr('pin_lock_sub'), '', '', toggle(!!localStorage.getItem('pin'), 'pinToggle'))}
   </div>

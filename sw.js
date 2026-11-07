@@ -1,12 +1,13 @@
 // Offline support: every file of the app is cached on install, so it opens
 // without internet. Bump VERSION on each release so phones fetch the new files.
-const VERSION = 'pfd-v4';
+const VERSION = 'pfd-v5';
 const FILES = [
   './',
   'index.html',
   'manifest.webmanifest',
   'css/app.css',
   'css/print.css',
+  'css/skins.css',
   'css/tokens.css',
   'js/actions.js',
   'js/core.js',

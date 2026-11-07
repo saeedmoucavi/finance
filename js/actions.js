@@ -101,7 +101,7 @@ export const A = {
     nameDialog(tr('add_item'), '', (n) => (tab === 2 ? D.addAccount(n, isFa()) : D.addCategory(n, tab === 1 ? 'income' : 'expense', isFa())));
   },
   // settings
-  setTheme: (ds) => { localStorage.setItem('theme', ['light', 'dark', 'auto'][Number(ds.i)]); loadPrefs(); render(); },
+  setTheme: (ds) => { localStorage.setItem('theme', ds.t); loadPrefs(); render(); },
   setLang: (ds) => { D.setSetting('lang', ds.i === '0' ? 'fa' : 'en'); loadPrefs(); render(); },
   setUnit: (ds) => { D.setSetting('unit', ds.i === '1' ? 'rial' : 'toman'); loadPrefs(); S.counts = {}; render(); },
   setDigits: () => { D.setSetting('fa_digits', prefs.faDigits ? '0' : '1'); loadPrefs(); render(); },

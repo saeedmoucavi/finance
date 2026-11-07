@@ -1,0 +1,160 @@
+/* Looks the user can pick under More > Appearance (see SKINS in js/theme.js).
+   html[data-theme] picks the light or dark base palette in tokens.css; html[data-skin]
+   then repaints it. "light" and "dark" are the original look and need nothing here. */
+
+/* ================================================================ shared: floating nav bar */
+html[data-skin^=glass] .nav, html[data-skin=brutal] .nav, html[data-skin=soft] .nav {
+  left: 12px; right: 12px; bottom: calc(10px + var(--safe-bottom)); max-width: calc(var(--max-width) - 24px);
+  border-radius: 34px; padding: 0 8px; }
+
+/* ================================================================ liquid glass (3 colour sets) */
+html[data-skin^=glass] {
+  --r-card: 26px; --r-hero: 30px; --r-item: 18px;
+  --hero: var(--glass); --hero-edge: var(--glass-line); --strip-bg: var(--glass); --strip-bg-ltr: initial; --nav: var(--glass);
+  --nav-shadow: inset 0 1px 0 var(--glass-hi), 0 14px 34px var(--glass-shadow); --shadow: inset 0 1px 0 var(--glass-hi), 0 14px 34px var(--glass-shadow);
+  --card-border: 1px solid var(--glass-line);
+}
+html[data-skin^=glass] body { background: transparent; }
+html[data-skin^=glass] body::before { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: var(--wall); }
+html[data-skin^=glass] .statusbar { background: transparent; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+html[data-skin^=glass] :is(.page .card, .tile, .hero, .loanstrip, .nav, .page .item, .month-chip) {
+  background: var(--glass); -webkit-backdrop-filter: blur(24px) saturate(160%); backdrop-filter: blur(24px) saturate(160%); }
+html[data-skin^=glass] .loanstrip { border: 1px solid var(--glass-line); box-shadow: var(--shadow); }
+html[data-skin^=glass] .page .item { border: 1px solid var(--glass-line); }
+html[data-skin^=glass] .month-chip { border: 1px solid var(--glass-line); }
+html[data-skin^=glass] .ring { border-color: var(--glass-line); background: var(--glass-soft); }
+
+/* shared by the two dark glass sets */
+html[data-skin=glass-night], html[data-skin=glass-graphite] {
+  --glass: linear-gradient(160deg, rgba(255, 255, 255, .12), rgba(255, 255, 255, .04)); --glass-soft: rgba(255, 255, 255, .06);
+  --glass-line: rgba(255, 255, 255, .16); --glass-hi: rgba(255, 255, 255, .22); --glass-shadow: rgba(0, 0, 0, .35);
+  --field: rgba(255, 255, 255, .07); --track: rgba(255, 255, 255, .09); --div: rgba(255, 255, 255, .08); --hair: rgba(255, 255, 255, .16);
+  --hero-ink: #FFFFFF; --hero-line: rgba(255, 255, 255, .26); --hero-tint: rgba(255, 255, 255, .09);
+  --strip-ink: #FFFFFF; --strip-muted: rgba(255, 255, 255, .68); --strip-line: rgba(255, 255, 255, .22); --strip-tint: rgba(255, 255, 255, .09);
+  --pill-bg: rgba(255, 255, 255, .10); --scrim: rgba(0, 0, 0, .55);
+}
+
+/* 1 · night: navy with a soft blue glow */
+html[data-skin=glass-night] {
+  --bg: #0B1220; --card: #141C2E;
+  --wall: radial-gradient(ellipse 120% 55% at 85% -8%, rgba(70, 115, 210, .45), transparent 62%),
+          radial-gradient(ellipse 100% 50% at 0% 105%, rgba(40, 70, 140, .28), transparent 60%), #0B1220;
+  --text: #EEF2FA; --text2: #A8B3C7; --muted: #8792A8; --hero-muted: #A8B3C7;
+  --accent: #8FB4FF; --accent-top: #A4C2FF; --on-accent: #0B1220;
+  --nav-active: #8FB4FF; --fab-top: #F4F7FD; --fab-bottom: #C9D6EE; --fab-icon: #0B1220;
+  --pos: #7FD8B6; --neg: #FF9A9A; --gold: #F2CF86;
+  --pos-bg: rgba(127, 216, 182, .14); --neg-bg: rgba(255, 154, 154, .14); --gold-bg: rgba(242, 207, 134, .14);
+  --pill-fill-on: linear-gradient(90deg, #5F86D9, #8FB4FF); --pill-track-on: rgba(0, 0, 0, .25);
+}
+
+/* 2 · graphite: black and white, colour only for money in and out */
+html[data-skin=glass-graphite] {
+  --bg: #141517; --card: #1E1F22;
+  --wall: radial-gradient(ellipse 120% 55% at 85% -8%, rgba(255, 255, 255, .13), transparent 62%),
+          radial-gradient(ellipse 100% 50% at 0% 105%, rgba(255, 255, 255, .05), transparent 60%), #141517;
+  --text: #F2F2F3; --text2: #ADAEB3; --muted: #8E8F95; --hero-muted: #ADAEB3;
+  --accent: #FFFFFF; --accent-top: #FFFFFF; --on-accent: #141517;
+  --nav-active: #FFFFFF; --fab-top: #FFFFFF; --fab-bottom: #D6D7DA; --fab-icon: #141517;
+  --pos: #8EDCB0; --neg: #FF8F8F; --gold: #E8C77A;
+  --pos-bg: rgba(142, 220, 176, .13); --neg-bg: rgba(255, 143, 143, .13); --gold-bg: rgba(232, 199, 122, .13);
+  --pill-fill-on: linear-gradient(90deg, #BDBEC2, #FFFFFF); --pill-track-on: rgba(0, 0, 0, .3);
+}
+
+/* 3 · snow: light, iOS blue */
+html[data-skin=glass-snow] {
+  --bg: #EEF2F8; --card: #FFFFFF;
+  --wall: radial-gradient(ellipse 120% 55% at 85% -8%, rgba(150, 190, 255, .55), transparent 62%),
+          radial-gradient(ellipse 100% 50% at 0% 105%, rgba(195, 212, 240, .65), transparent 60%), #EEF2F8;
+  --glass: linear-gradient(160deg, rgba(255, 255, 255, .80), rgba(255, 255, 255, .52)); --glass-soft: rgba(255, 255, 255, .55);
+  --glass-line: rgba(255, 255, 255, .95); --glass-hi: #FFFFFF; --glass-shadow: rgba(30, 40, 70, .10);
+  --text: #101828; --text2: #4A5468; --muted: #6B7488; --hero-muted: #5B6575;
+  --field: rgba(20, 30, 60, .05); --track: rgba(20, 30, 60, .07); --div: rgba(20, 30, 60, .07); --hair: rgba(20, 30, 60, .13);
+  --accent: #0A84FF; --accent-top: #2B95FF; --on-accent: #FFFFFF;
+  --nav-active: #0A84FF; --fab-top: #2B95FF; --fab-bottom: #0A74E6; --fab-icon: #FFFFFF;
+  --pos: #1E9A5A; --neg: #E5484D; --gold: #B7790A; --pos-bg: #E3F4EA; --neg-bg: #FDE8E8; --gold-bg: #FBF1DC;
+  --hero-ink: #101828; --hero-line: rgba(20, 30, 60, .16); --hero-tint: rgba(20, 30, 60, .06);
+  --strip-ink: #101828; --strip-muted: #5B6575; --strip-line: rgba(20, 30, 60, .14); --strip-tint: rgba(20, 30, 60, .06);
+  --pill-bg: linear-gradient(#2B95FF, #0A84FF); --pill-fill-on: linear-gradient(90deg, #0A84FF, #5AA9FF); --pill-track-on: rgba(20, 30, 60, .08);
+  --scrim: rgba(20, 30, 60, .30);
+}
+
+/* ================================================================ neo-brutal: thick black lines, loud colour */
+html[data-skin=brutal] {
+  --bg: #FAFAF7; --card: #FFFFFF; --text: #111111; --text2: #333333; --muted: #5A5A5A;
+  --hair: #111111; --div: rgba(17, 17, 17, .14); --field: #F1F0EA; --track: #ECEBE4;
+  --accent: #111111; --accent-top: #111111; --on-accent: #FFD43B;
+  --hero: #FFD43B; --hero-edge: #111111; --hero-ink: #111111; --hero-muted: rgba(17, 17, 17, .68);
+  --hero-line: rgba(17, 17, 17, .55); --hero-tint: rgba(17, 17, 17, .09);
+  --strip-bg: #3D5AFE; --strip-bg-ltr: initial; --strip-ink: #FFFFFF; --strip-muted: rgba(255, 255, 255, .82);
+  --strip-line: #111111; --strip-tint: #111111;
+  --pill-track-on: #FFFFFF; --pill-fill-on: #FFD43B; --pill-bg: #111111;
+  --pos: #0B8457; --neg: #D6336C; --gold: #7A5F00; --pos-bg: #C9F2DF; --neg-bg: #FFD3E6; --gold-bg: #FFEFB0;
+  --nav: #FFFFFF; --nav-active: #111111; --fab-top: #3D5AFE; --fab-bottom: #3D5AFE; --fab-icon: #FFFFFF;
+  --shadow: 4px 4px 0 #111111; --nav-shadow: 4px 4px 0 #111111; --card-border: 2.5px solid #111111; --scrim: rgba(17, 17, 17, .45);
+  --r-card: 16px; --r-hero: 16px; --r-tile: 16px; --r-item: 12px; --r-pill: 12px; --r-field: 12px; --r-sheet: 20px; --r-dialog: 16px;
+}
+html[data-skin=brutal] .hero { border-width: 2.5px; box-shadow: 4px 4px 0 #111; }
+html[data-skin=brutal] .home-head .main, html[data-skin=brutal] .topbar h1 { font-weight: 800; }
+html[data-skin=brutal] .loanstrip { border: 2.5px solid #111; border-radius: 16px; box-shadow: 4px 4px 0 #111; }
+html[data-skin=brutal] .pill.on-dark .pc { color: #FFFFFF; }
+html[data-skin=brutal] .pill.on-dark .fl { border-inline-end: 2px solid #111; }
+html[data-skin=brutal] .nav { border: 2.5px solid #111; border-radius: 18px; }
+html[data-skin=brutal] .nav .it.on { background: #FFD43B; border: 2px solid #111; border-radius: 10px; }
+html[data-skin=brutal] .nav .it.on .ln { display: none; }
+html[data-skin=brutal] .fab { border: 2.5px solid #111; border-radius: 16px; box-shadow: 3px 3px 0 #111; }
+html[data-skin=brutal] .ring { border: 2px solid #111; color: #111; }
+html[data-skin=brutal] .hero .ring.dark { border-color: #111; color: #111; }
+html[data-skin=brutal] .month-chip { background: #7CE0B5; border: 2px solid #111; box-shadow: 2px 2px 0 #111; }
+html[data-skin=brutal] .page .item { border: 2px solid #111; }
+html[data-skin=brutal] .seg { border: 2px solid #111; }
+html[data-skin=brutal] .seg button { border-radius: 8px; }
+html[data-skin=brutal] .btn { border: 2.5px solid #111; box-shadow: 3px 3px 0 #111; }
+html[data-skin=brutal] .obtn, html[data-skin=brutal] .mini, html[data-skin=brutal] .pick { border: 2px solid #111; }
+html[data-skin=brutal] .field { border: 2px solid #111; }
+html[data-skin=brutal] .chip { border: 2px solid #111; }
+html[data-skin=brutal] .bar .track { border: 2px solid #111; border-radius: 10px; }
+html[data-skin=brutal] .bar .fill { border-radius: 0; }
+html[data-skin=brutal] .sheet, html[data-skin=brutal] .dialog { border: 2.5px solid #111; }
+html[data-skin=brutal] .toast { background: #111; color: #FFD43B; border-radius: 12px; }
+
+/* ================================================================ soft (neumorphism): raised and pressed grey */
+html[data-skin=soft] {
+  --bg: #E7EAF0; --card: #E7EAF0; --text: #2F3648; --text2: #5C6478; --muted: #7A8296;
+  --hair: #CDD2DC; --div: rgba(47, 54, 72, .07); --field: #E7EAF0; --track: #DCE0E8;
+  --accent: #5361D9; --accent-top: #6B78F0; --on-accent: #FFFFFF;
+  --raise: 8px 8px 16px #C5CAD4, -8px -8px 16px #FFFFFF; --press: inset 4px 4px 9px #C5CAD4, inset -4px -4px 9px #FFFFFF;
+  --hero: #E7EAF0; --hero-edge: transparent; --hero-ink: #2F3648; --hero-muted: #5C6478;
+  --hero-line: rgba(47, 54, 72, .18); --hero-tint: #D9DDE6;
+  --strip-bg: linear-gradient(145deg, #7C88F5, #4653CC); --strip-bg-ltr: initial; --strip-ink: #FFFFFF;
+  --strip-muted: rgba(255, 255, 255, .78); --strip-line: rgba(255, 255, 255, .3); --strip-tint: rgba(255, 255, 255, .14);
+  --pill-bg: linear-gradient(#6B78F0, #5361D9); --pill-fill-on: linear-gradient(90deg, #DDE1FF, #FFFFFF); --pill-track-on: rgba(20, 24, 80, .25);
+  --pos: #23845F; --neg: #C4513E; --gold: #9A6E12; --pos-bg: #D5ECE3; --neg-bg: #F3DAD4; --gold-bg: #F1E6CB;
+  --nav: #E7EAF0; --nav-active: #5361D9; --fab-top: #6B78F0; --fab-bottom: #4653CC; --fab-icon: #FFFFFF;
+  --shadow: var(--raise); --nav-shadow: var(--raise); --scrim: rgba(47, 54, 72, .32);
+  --r-card: 28px; --r-hero: 32px; --r-tile: 24px;
+}
+html[data-skin=soft] .hero { box-shadow: var(--raise); }
+html[data-skin=soft] .loanstrip { box-shadow: 8px 8px 16px #C5CAD4, -8px -8px 16px #FFFFFF; }
+html[data-skin=soft] .page .item { background: #ECEFF4; box-shadow: inset 1.5px 1.5px 0 #FFFFFF, inset -1.5px -1.5px 0 #CDD2DC; }
+html[data-skin=soft] :is(.field, .seg, .month-chip, .bar .track, .plan-bar, .toggle) { box-shadow: var(--press); border-color: transparent; }
+html[data-skin=soft] .ring { border: 0; box-shadow: 4px 4px 9px #C5CAD4, -4px -4px 9px #FFFFFF; }
+html[data-skin=soft] .ring:active, html[data-skin=soft] .keypad button:active { box-shadow: var(--press); background: transparent; }
+html[data-skin=soft] .hero .ring.dark { color: var(--accent); }
+html[data-skin=soft] :is(.btn, .fab) { box-shadow: 6px 6px 12px #B9BFCB, -6px -6px 12px #FFFFFF; }
+html[data-skin=soft] :is(.obtn, .mini, .pick) { border-color: transparent; box-shadow: 4px 4px 9px #C5CAD4, -4px -4px 9px #FFFFFF; }
+html[data-skin=soft] .pick.on { box-shadow: var(--press); background: var(--accent); }
+html[data-skin=soft] .nav .it.on .ln { width: 6px; height: 6px; border-radius: 50%; }
+html[data-skin=soft] .sheet-foot { border-top-color: transparent; }
+
+/* ================================================================ appearance picker (settings) */
+.skins { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.skin { display: flex; flex-direction: column; gap: 8px; padding: 8px; border-radius: 18px; border: 1.5px solid var(--div); background: var(--field); text-align: start; }
+.skin.on { border-color: var(--accent); }
+.skin .pv { position: relative; height: 92px; border-radius: 12px; overflow: hidden; padding: 9px; display: flex; flex-direction: column; gap: 5px; border: 1px solid var(--div); }
+.skin .pv i { display: block; border-radius: 6px; }
+.skin .pv .h { height: 30px; }
+.skin .pv .c { height: 14px; }
+.skin .pv .a { position: absolute; bottom: 8px; left: 50%; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; }
+.skin .nm { display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; padding: 0 2px; }
+.skin .nm .ck { margin-inline-start: auto; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--hair); display: flex; align-items: center; justify-content: center; }
+.skin.on .nm .ck { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }

@@ -437,8 +437,28 @@ export const TEXT = {
   "Appearance"
  ],
  "appearance_sub": [
-  "روشن · تیره · خودکار",
-  "Light · dark · auto"
+  "۷ ظاهر: روشن، تیره، شیشه‌ای، رنگی، نرم",
+  "7 looks: light, dark, glass, bold, soft"
+ ],
+ "theme_glass_night": [
+  "شیشه‌ای · شب",
+  "Glass · Night"
+ ],
+ "theme_glass_graphite": [
+  "شیشه‌ای · گرافیت",
+  "Glass · Graphite"
+ ],
+ "theme_glass_snow": [
+  "شیشه‌ای · برفی",
+  "Glass · Snow"
+ ],
+ "theme_brutal": [
+  "رنگی جسور",
+  "Bold"
+ ],
+ "theme_soft": [
+  "نرم",
+  "Soft"
  ],
  "theme_light": [
   "روشن",

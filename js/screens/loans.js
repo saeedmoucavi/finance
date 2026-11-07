@@ -13,7 +13,7 @@ export const loansScreen = () => {
   const [ty, tm] = J.today();
   const lt = D.loanTotals(...J.monthRange(ty, tm));
   const cell = (label, value, w) => `<div class="col" style="flex:${w};min-width:0"><span class="ell" style="font-size:11px;color:var(--hero-muted)">${label}</span>
-    <span class="ell" style="font-size:17px;font-weight:600;color:#fff">${value}</span></div>`;
+    <span class="ell" style="font-size:17px;font-weight:600;color:var(--hero-ink)">${value}</span></div>`;
   return `<div class="page sub">
   ${topbar(tr('nav_loans'), true, ring('calendar', 'go', 'data-s="loanplan" aria-label="' + tr('loan_plan') + '"') + ring('plus', 'loanNew'))}
   <div class="hero row" style="border-radius:24px;padding:14px 16px;gap:14px">${cell(tr('remaining_total'), compact(lt.remaining), 1.2)}${cell(tr('this_month'), compact(lt.dueThisMonth), 1)}${cell(tr('active_loans'), num(lt.active), 0.7)}</div>
