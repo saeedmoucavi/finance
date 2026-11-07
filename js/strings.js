@@ -36,6 +36,10 @@ export const TEXT = {
   "از ماه قبل",
   "From last month"
  ],
+ "balance_since": [
+  "از اول مهر ۱۴۰۵",
+  "Since Mehr 1405"
+ ],
  "this_month": [
   "این ماه",
   "This month"

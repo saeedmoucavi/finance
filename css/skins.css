@@ -158,3 +158,41 @@ html[data-skin=soft] .sheet-foot { border-top-color: transparent; }
 .skin .nm { display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; padding: 0 2px; }
 .skin .nm .ck { margin-inline-start: auto; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--hair); display: flex; align-items: center; justify-content: center; }
 .skin.on .nm .ck { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+
+/* ================================================================ home layout of the newer looks */
+/* category colours for the stacked expense bar, per look */
+html[data-skin=glass-night] { --cat1: #8FB4FF; --cat2: #6A8BD6; --cat3: #4C68A8; --cat4: #3A507F; --cat5: rgba(255, 255, 255, .25); }
+html[data-skin=glass-graphite] { --cat1: #F2F2F3; --cat2: #BDBEC2; --cat3: #8A8B90; --cat4: #5E5F64; --cat5: #3E3F43; }
+html[data-skin=glass-snow] { --cat1: #0A84FF; --cat2: #5AA9FF; --cat3: #9CCBFF; --cat4: #C9E2FF; --cat5: #D5DCE6; }
+html[data-skin=brutal] { --cat1: #FF7AB6; --cat2: #7CE0B5; --cat3: #FFD43B; --cat4: #3D5AFE; --cat5: #CFCFC8; }
+html[data-skin=soft] { --cat1: #5361D9; --cat2: #7C88F5; --cat3: #A5AEF7; --cat4: #CDD2FB; --cat5: #C9CED8; }
+
+.hero.bal { display: flex; flex-direction: column; gap: 12px; padding: 18px; }
+.bal-since { font-size: 11.5px; padding: 4px 10px; border-radius: 12px; background: var(--hero-tint); border: 1px solid var(--hero-line); white-space: nowrap; }
+/* unit on the start (right in Persian), the amount pushed to the far end (left) */
+.bal-line { display: flex; align-items: baseline; gap: 10px; }
+.bal-unit { font-size: 13px; color: var(--hero-muted); }
+.bal-big { margin-inline-start: auto; font-size: 34px; font-weight: 700; letter-spacing: -.5px; line-height: 1.15; white-space: nowrap; }
+.bal-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.bal-tile { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 16px; background: var(--hero-tint); min-width: 0; }
+.bal-tile .k { font-size: 11px; color: var(--hero-muted); }
+.bal-tile .v { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bal-tile .v.gold { color: var(--gold); }
+.stack { display: flex; gap: 4px; height: 12px; margin: 14px 0 12px; }
+.stack i { display: block; border-radius: 6px; min-width: 6px; animation: fillx .8s cubic-bezier(.16, .84, .34, 1) both; }
+.stack-legend { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px 10px; font-size: 11.5px; color: var(--text2); }
+.stack-legend > span { display: flex; align-items: center; gap: 5px; min-width: 0; white-space: nowrap; }
+.stack-legend i { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+html[data-skin=brutal] .bal-tile { background: #FFFFFF; border: 2px solid #111; }
+html[data-skin=brutal] .bal-since { background: #111; color: #FFD43B; border-color: #111; }
+html[data-skin=brutal] .stack i { border: 2px solid #111; border-radius: 4px; }
+html[data-skin=brutal] .stack-legend i { border: 1.5px solid #111; }
+html[data-skin=soft] .bal-tile, html[data-skin=soft] .bal-since { background: transparent; border-color: transparent; box-shadow: var(--press); }
+html[data-skin=soft] .stack { padding: 3px; height: 18px; border-radius: 9px; box-shadow: var(--press); }
+
+/* glass rows are see-through, so the red delete layer behind a transaction only shows while it is being swiped */
+html[data-skin^=glass] .swipe .under { visibility: hidden; }
+html[data-skin^=glass] .swipe.swiping .under { visibility: visible; }
+/* rows inside a glass card are not glass again (no double frame); solid only while being swiped */
+html[data-skin^=glass] .page .card .item { background: transparent; border-color: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+html[data-skin^=glass] .page .card .swipe.swiping .item { background: var(--card); }

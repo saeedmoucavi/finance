@@ -32,6 +32,8 @@ export const homeScreen = () => {
   }
   const lastBackup = Number(localStorage.getItem('last_backup') || 0);
   const needBackup = (D.transactions('0000-01-01', '9999-12-31').length > 0) && Date.now() - lastBackup > 14 * 86400000;
+  // the original light and dark looks keep the donut card; the newer looks use the tiled layout
+  const fresh = S.skin !== 'light' && S.skin !== 'dark';
 
   return `<div class="page">
   <div class="row home-head rise" style="align-items:flex-end">
@@ -40,7 +42,7 @@ export const homeScreen = () => {
   </div>
   ${needBackup ? `<div class="card click row rise" data-a="backup" style="padding:12px 14px">${chip('upload', 'var(--gold-bg)', 'var(--gold)', 32, 15)}
      <div class="grow" style="font-size:12.5px">${tr('backup_remind')}</div><span class="mini">${tr('backup_send')}</span></div>` : ''}
-  <div class="hero rise" style="animation-delay:.05s">
+  ${fresh ? balanceCard(balance, carry, tot) : `<div class="hero rise" style="animation-delay:.05s">
     <div class="row" style="gap:8px"><span class="dot" style="width:6px;height:6px;background:#C7CED6"></span>
       <span class="lbl grow">${tr('month_balance')}</span>${ring('arrow_out', 'go', 'data-s="reports"', 'dark')}</div>
     <div class="row" style="gap:12px;margin-top:6px">
@@ -51,25 +53,48 @@ export const homeScreen = () => {
       </div>
       ${donut([tot.income, tot.expense, tot.installments], [FLOW.income, FLOW.expense, FLOW.installments], 118, 14, 'var(--hero-tint)', `<span class="lbl" style="font-size:11px">${tr('this_month')}</span>`)}
     </div>
-  </div>
+  </div>`}
   <div class="loanstrip rise" style="animation-delay:.1s" data-a="go" data-s="loans">
     <div class="col"><span class="lbl">${tr('loan_debt')}</span><span style="font-size:17px;font-weight:600">${compact(lt.remaining)}</span></div>
     <div class="grow col" style="gap:5px">${lt.count === 0 ? `<span class="lbl">${tr('no_loans')}</span>` :
       `<span class="lbl ell" style="font-size:10.5px">${t('paid_of', num(lt.done), num(lt.count))}</span>${pill(lt.done / lt.count, true)}`}</div>
   </div>
-  <div class="card click rise" style="animation-delay:.15s" data-a="go" data-s="reports">
+  ${fresh ? expenseCard(slices, tot.expense, cmp) : `<div class="card click rise" style="animation-delay:.15s" data-a="go" data-s="reports">
     <div class="row" style="align-items:flex-start">${chip('down', 'var(--neg-bg)', 'var(--neg)', 34, 15)}
       <div class="grow"><div class="b" style="font-size:13.5px">${tr('month_expenses')}</div><div class="muted" style="font-size:11px">${tr('by_category')}</div></div>
       <div class="col" style="align-items:flex-end"><div class="neg b" style="font-size:20px">${amount(tot.expense)}</div>${cmp}</div></div>
     <div style="height:14px"></div>
     ${slices.length ? categoryBars(slices, tot.expense) : hint(tr('no_expenses'))}
-  </div>
+  </div>`}
   <div class="card rise" style="animation-delay:.2s;padding:12px 16px">
     <div class="row"><span class="b grow" style="font-size:13.5px">${tr('upcoming')}</span><button class="link" data-a="go" data-s="loans">${tr('all')}</button></div>
     ${up.length ? up.map(instRow).join('') : hint(tr('no_upcoming'))}
   </div>
 </div>`;
 };
+
+/** Balance card of the newer looks: unit and amount on one line, then four tiles. */
+function balanceCard(balance, carry, tot) {
+  const tile = (label, value, cls = '') => `<div class="bal-tile"><span class="k">${label}</span><span class="v num ${cls}">${value}</span></div>`;
+  return `<div class="hero bal click rise" style="animation-delay:.05s" data-a="go" data-s="reports">
+    <div class="row"><span class="lbl grow">${tr('month_balance')}</span><span class="bal-since">${tr('balance_since')}</span></div>
+    <div class="bal-line"><span class="bal-unit">${unitLabel()}</span><span class="bal-big num" data-count="${balance}" data-key="net">${amount(S.counts.net ?? 0)}</span></div>
+    <div class="bal-tiles">${tile(tr('from_last_month'), amount(carry))}${tile(tr('income'), amount(tot.income), 'pos')}${tile(tr('expenses'), amount(tot.expense), 'neg')}${tile(tr('installments'), amount(tot.installments), 'gold')}</div>
+  </div>`;
+}
+
+/** Expenses of the newer looks: one stacked bar and a legend. */
+function expenseCard(slices, total, cmp) {
+  const pct = (s) => (total > 0 ? Math.round((s.total * 100) / total) : 0);
+  const col = (s, i) => (s.cid === -1 ? 'var(--cat5)' : `var(--cat${(i % 4) + 1})`);
+  return `<div class="card click rise" style="animation-delay:.15s" data-a="go" data-s="reports">
+    <div class="row" style="align-items:flex-start"><span class="b grow" style="font-size:14.5px">${tr('month_expenses')}</span>
+      <div class="col" style="align-items:flex-end"><span class="neg b" style="font-size:17px">${amount(total)}</span>${cmp}</div></div>
+    ${slices.length ? `<div class="stack">${slices.map((s, i) => `<i style="flex:${Math.max(pct(s), 2)};background:${col(s, i)}"></i>`).join('')}</div>
+      <div class="stack-legend">${slices.map((s, i) => `<span><i style="background:${col(s, i)}"></i><span class="ell">${esc(catName(s))}</span> ${percent(pct(s))}</span>`).join('')}</div>`
+      : hint(tr('no_expenses'))}
+  </div>`;
+}
 
 export function topSlices(all) {
   const list = all.filter((s) => s.total > 0);

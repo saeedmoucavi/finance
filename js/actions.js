@@ -156,7 +156,7 @@ document.addEventListener('touchmove', (e) => {
   const dx = e.touches[0].clientX - sw.x;
   const dy = e.touches[0].clientY - sw.y;
   if (!sw.active && Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy)) sw.active = true;
-  if (sw.active) { sw.dx = dx; sw.item.style.transition = 'none'; sw.item.style.transform = `translateX(${dx}px)`; }
+  if (sw.active) { sw.dx = dx; sw.item.parentElement.classList.add('swiping'); sw.item.style.transition = 'none'; sw.item.style.transform = `translateX(${dx}px)`; }
 }, { passive: true });
 document.addEventListener('touchend', () => {
   if (!sw) return;
@@ -164,6 +164,8 @@ document.addEventListener('touchend', () => {
   sw = null;
   item.style.transition = '';
   item.style.transform = '';
+  // hide the red delete layer again once the row has slid back
+  setTimeout(() => item.parentElement?.classList.remove('swiping'), 250);
   if (!active) return;
   swiped = true;
   setTimeout(() => { swiped = false; }, 350);
